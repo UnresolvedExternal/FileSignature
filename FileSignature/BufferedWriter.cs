@@ -26,7 +26,7 @@ namespace FileSignature
 		/// </remarks>
 		public void Write(int blockNumber, string blockValue)
 		{
-			if (blockNumber < _nextBlockNumber) throw new ArgumentOutOfRangeException(nameof(blockNumber));
+			if (blockNumber < _nextBlockNumber) ThrowBlockAlreadyWritten(blockNumber);
 			if (blockValue == null) throw new ArgumentNullException(nameof(blockValue));
 
 			lock (_locker)
@@ -41,7 +41,14 @@ namespace FileSignature
 				if (_buffer.Length == 0)
 				{
 					_stream.Write(blockValue);
+					ShiftBlocks(1);
 					return;
+				}
+
+				int bufferIndex = blockNumber - _nextBlockNumber;
+				if (_buffer[bufferIndex] != null)
+				{
+					ThrowBlockAlreadyWritten(blockNumber);
 				}
 
 				_buffer[blockNumber - _nextBlockNumber] = blockValue;
@@ -52,6 +59,11 @@ namespace FileSignature
 					ShiftBlocks(shift);
 				}
 			}
+		}
+
+		private void ThrowBlockAlreadyWritten(int blockNumber)
+		{
+			throw new ArgumentOutOfRangeException($"Block with same number ({blockNumber}) has already written");
 		}
 
 		private void ShiftBlocks(int shift)
