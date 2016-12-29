@@ -40,7 +40,7 @@ namespace FileSignature
 
 		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
-			Logger.Log((Exception)(e.ExceptionObject));
+			Logger.Log((Exception)e.ExceptionObject);
 			Environment.Exit(1);
 		}
 	}
