@@ -9,17 +9,17 @@ namespace FileSignature
 	{
 		private readonly Stream _input;
 		private readonly int _blockSize;
-		private readonly SemaphoreSlim _readLimimiter;
+		private readonly SemaphoreSlim _readLimiter;
 
-		public AdvancedStreamReader(Stream input, int blockSize, SemaphoreSlim readLimimiter)
+		public AdvancedStreamReader(Stream input, int blockSize, SemaphoreSlim readLimiter)
 		{
 			if (input == null) throw new ArgumentNullException(nameof(input));
 			if (blockSize <= 0) throw new ArgumentOutOfRangeException(nameof(blockSize));
-			if (readLimimiter == null) throw new ArgumentNullException(nameof(readLimimiter));
+			if (readLimiter == null) throw new ArgumentNullException(nameof(readLimiter));
 
 			_input = input;
 			_blockSize = blockSize;
-			_readLimimiter = readLimimiter;
+			_readLimiter = readLimiter;
 		}
 
 		public event BlockHandler BlockReaded;
@@ -30,12 +30,12 @@ namespace FileSignature
 			int blockNumber = 0;
 			while (true)
 			{
-				_readLimimiter.WaitOne();
+				_readLimiter.WaitOne();
 				var buffer = new byte[_blockSize];
 				int size = _input.Read(buffer, 0, _blockSize);
 				if (size == 0)
 				{
-					_readLimimiter.Release();
+					_readLimiter.Release();
 					EndOfStream?.Invoke();
 					return;
 				}

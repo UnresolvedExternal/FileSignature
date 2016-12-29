@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 
 namespace FileSignature
 {
@@ -9,8 +8,7 @@ namespace FileSignature
 		{
 			Console.WriteLine($"Message: {e.Message}");
 			Console.WriteLine("Stack trace:");
-			foreach (Match m in Regex.Matches(e.StackTrace, @".*\)"))
-				Console.WriteLine(m.Value);
+			Console.WriteLine(e.StackTrace);
 		}
 	}
 }

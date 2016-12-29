@@ -8,7 +8,7 @@ namespace FileSignature
 		static void Main(string[] args)
 		{
 			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-			Console.WindowWidth = 120;
+
 			string fileName;
 			int blockSize;
 			ExtractArguments(args, out fileName, out blockSize);

@@ -19,16 +19,7 @@ namespace FileSignature
 			_locker = new object();
 		}
 
-		public int CurrentValue
-		{
-			get
-			{
-				lock (_locker)
-				{
-					return _currentValue;
-				}
-			}
-		}
+		public int CurrentValue => Thread.VolatileRead(ref _currentValue);
 
 		public void WaitOne()
 		{

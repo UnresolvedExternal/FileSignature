@@ -6,17 +6,17 @@ namespace FileSignature
 {
 	internal class BufferedTextWriter
 	{
-		private readonly TextWriter _stream;
+		private readonly TextWriter _writer;
 		private int _nextBlockNumber;
 		private readonly string[] _buffer;
 		private readonly object _locker;
 
-		public BufferedTextWriter(TextWriter stream, int bufferSize)
+		public BufferedTextWriter(TextWriter writer, int bufferSize)
 		{
-			if (stream == null) throw new ArgumentNullException(nameof(stream));
+			if (writer == null) throw new ArgumentNullException(nameof(writer));
 			if (bufferSize < 0) throw new ArgumentOutOfRangeException(nameof(bufferSize));
 
-			_stream = stream;
+			_writer = writer;
 			_buffer = new string[bufferSize];
 			_locker = new object();
 		}
@@ -40,7 +40,7 @@ namespace FileSignature
 
 				if (_buffer.Length == 0)
 				{
-					_stream.Write(blockValue);
+					_writer.Write(blockValue);
 					ShiftBlocks(1);
 					return;
 				}
@@ -81,7 +81,7 @@ namespace FileSignature
 		private void WriteBlocks(int shift)
 		{
 			for (int i = 0; i < shift; ++i)
-				_stream.Write(_buffer[i]);
+				_writer.Write(_buffer[i]);
 		}
 
 		private int CalculateShift()
